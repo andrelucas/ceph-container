@@ -29,4 +29,6 @@ make FLAVORS=reef,centos,8 \
     stage
 ```
 
-The `Dockerfile`s you seek are in `staging/reef-centos-8-x86_64`
+The `Dockerfile`s you seek are in `staging/reef-centos-8-x86_64`. If anything
+changes, do `make clean.all` beforehand or it won't reliably regenerate the
+files.
