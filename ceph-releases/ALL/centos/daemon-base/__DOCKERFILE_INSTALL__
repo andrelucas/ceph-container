@@ -81,7 +81,35 @@ if [[ "${CEPH_VERSION}" == nautilus ]]; then \
   fi ; \
 fi && \
 bash -c ' \
-  if [[ "${CEPH_VERSION}" =~ master  || "${CEPH_VERSION}" == main ]] || ${CEPH_DEVEL}; then \
+  if [[ -n "__ENV_[CUSTOM_CEPH_YUM_REPO]__" ]]; then \
+    REPO_URL="__ENV_[CUSTOM_CEPH_YUM_REPO]__"; \
+    RELEASE_VER=1 ;\
+    if [[ "${OSD_FLAVOR}" == "crimson" ]]; then \
+     CRIMSON_PACKAGES="ceph-crimson-osd-__ENV_[CEPH_POINT_RELEASE]__";\
+    fi && \
+    repolist=/etc/yum.repos.d/ceph.repo; cp /dev/null $repolist && \
+    echo "[Ceph]" >>$repolist && \
+    echo "name=Ceph packages for \$basearch" >>$repolist && \
+    echo "baseurl=${REPO_URL}/RPMS/\$basearch" >>$repolist && \
+    echo "enabled=1" >>$repolist && \
+    echo "gpgcheck=0" >>$repolist && \
+    echo "type=rpm-md" >>$repolist && \
+    echo "" >>$repolist && \
+    echo "[Ceph-noarch]" >>$repolist && \
+    echo "name=Ceph noarch packages" >>$repolist && \
+    echo "baseurl=${REPO_URL}/RPMS/noarch" >>$repolist && \
+    echo "enabled=1" >>$repolist && \
+    echo "gpgcheck=0" >>$repolist && \
+    echo "type=rpm-md" >>$repolist && \
+    echo "" >>$repolist && \
+    echo "[ceph-source]" >>$repolist && \
+    echo "name=Ceph source packages" >>$repolist && \
+    echo "baseurl=${REPO_URL}/SRPMS" >>$repolist && \
+    echo "enabled=1" >>$repolist && \
+    echo "gpgcheck=0" >>$repolist && \
+    echo "type=rpm-md" >>$repolist && \
+    yum makecache;\
+  elif [[ "${CEPH_VERSION}" =~ master  || "${CEPH_VERSION}" == main ]] || ${CEPH_DEVEL}; then \" >>$repolist; \
     ARCH=$(arch); \
     if [[ "${ARCH}" == "aarch64" ]]; then \
       ARCH="arm64"; \
@@ -99,7 +127,9 @@ bash -c ' \
       REPO_URL="http://download.ceph.com/rpm-${CEPH_VERSION}/el__ENV_[DISTRO_VERSION]__/"; \
     fi \
   fi && \
-  rpm -Uvh "$REPO_URL/noarch/ceph-release-1-${RELEASE_VER}.el__ENV_[DISTRO_VERSION]__.noarch.rpm" && \
+  if [[ -z "__ENV_[CUSTOM_CEPH_YUM_REPO]__" ]]; then \
+    rpm -Uvh "$REPO_URL/noarch/ceph-release-1-${RELEASE_VER}.el__ENV_[DISTRO_VERSION]__.noarch.rpm"; \
+  fi && \
   #
   # We have to change this after installing because ceph-release is built long
   # ago in the ceph build
