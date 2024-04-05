@@ -16,3 +16,17 @@ make FLAVORS=reef,centos,8 \
     build
 ```
 
+## Note: Getting the Docker source files.
+
+If you want to see the `Dockerfile`s this is built from, do the above command
+and change the target to `stage` (check this is the same command as for
+building, it might get out of sync):
+
+```sh
+make FLAVORS=reef,centos,8 \
+    BASEOS_REGISTRY=quay.io/centos BASEOS_REPO=centos BASEOS_TAG=stream8 \
+    CUSTOM_CEPH_YUM_REPO=http://SERVER:PORT/ \
+    stage
+```
+
+The `Dockerfile`s you seek are in `staging/reef-centos-8-x86_64`
