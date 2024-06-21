@@ -46,6 +46,9 @@ PRERELEASE ?= false
 PRERELEASE_USERNAME ?= ""
 PRERELEASE_PASSWORD ?= ""
 
+## Akamai: Set to a Yum repo location containing the Ceph packages. This is
+## normally set in a script but could potentially be defaulted here.
+#CUSTOM_CEPH_YUM_REPO ?= ""
 
 # ==============================================================================
 # Internal definitions

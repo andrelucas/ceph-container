@@ -54,6 +54,7 @@ $(shell bash -c 'set -eu ; \
 			"demo:$(RELEASE)-$$CEPH_VERSION-$$DISTRO-$$BASEOS_TAG-$$HOST_ARCH")" ; \
 	if [ -n "$(TAG_REGISTRY)" ]; then demo_img="$(TAG_REGISTRY)/$$demo_img" ; fi ; \
 	set_var DEMO_IMAGE       "$$demo_img" ; \
+	set_var CUSTOM_CEPH_YUM_REPO "$(CUSTOM_CEPH_YUM_REPO)"; \
 	'
 )
 endef
