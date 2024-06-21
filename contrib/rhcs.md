@@ -21,12 +21,12 @@ final `Dockerfile` that developers can build or commit to dist-git. This
 command generates that downstream Red Hat UBI-based `Dockerfile`:
 
 ```
-BRANDING=redhat VERSION=7 ./contrib/compose-rhcs.sh
+BRANDING=redhat VERSION=8 ./contrib/compose-rhcs.sh
 ```
 
 Or the IBM-branded `Dockerfile`:
 ```
-BRANDING=ibm VERSION=7 ./contrib/compose-rhcs.sh
+BRANDING=ibm VERSION=8 ./contrib/compose-rhcs.sh
 ```
 
 ## Yum repositories
@@ -40,7 +40,7 @@ To test a local build outside OSBS, you must mimic what OSBS does and insert som
 First, create an ODCS compose from the candidate tag:
 
 ```
-odcs --redhat create-tag --sigkey none ceph-7.0-rhel-9-candidate
+odcs --redhat create-tag --sigkey none ceph-8.0-rhel-9-candidate
 ```
 
 Save the resulting id and baseurl for the next step.
@@ -50,14 +50,21 @@ Next, after the `RUN rm -f /etc/yum.repos.d/ubi.repo` step, add the following by
 ```Dockerfile
 RUN printf '[rhel-9-baseos]\n\
 name = Red Hat Enterprise Linux 9 BaseOS\n\
-baseurl = http://rhsm-pulp.corp.redhat.com/content/dist/rhel9/9/$basearch/baseos/os/\n\
+baseurl = https://rhsm-pulp.corp.redhat.com/content/dist/rhel9/9/$basearch/baseos/os/\n\
 enabled = 1\n\
 gpgcheck = 1\n\
 gpgkey = file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release\n\
 \n\
 [rhel-9-appstream]\n\
 name = Red Hat Enterprise Linux 9 AppStream\n\
-baseurl = http://rhsm-pulp.corp.redhat.com/content/dist/rhel9/9/$basearch/appstream/os/\n\
+baseurl = https://rhsm-pulp.corp.redhat.com/content/dist/rhel9/9/$basearch/appstream/os/\n\
+enabled = 1\n\
+gpgcheck = 1\n\
+gpgkey = file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release\n\
+\n\
+[rhel-9-codeready-builder]\n\
+name = Red Hat Enterprise Linux 9 CRB\n\
+baseurl = https://rhsm-pulp.corp.redhat.com/content/dist/rhel9/9/$basearch/codeready-builder/os/\n\
 enabled = 1\n\
 gpgcheck = 1\n\
 gpgkey = file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release' >> /etc/yum.repos.d/rhel-9.repo
@@ -66,7 +73,7 @@ gpgkey = file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release' >> /etc/yum.repos.d
 
 RUN printf '[odcs]\n\
 name = odcs\n\
-baseurl = http://download.eng.bos.redhat.com/odcs/prod/odcs-12345678/compose/Temporary/$basearch/os/\n\
+baseurl = http://download-01.beak-001.prod.iad2.dc.redhat.com/odcs/prod/odcs-12345678/compose/Temporary/$basearch/os/\n\
 enabled = 1\n\
 gpgcheck = 0\n\
 ' >> /etc/yum.repos.d/odcs.repo
