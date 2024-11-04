@@ -13,8 +13,8 @@ trap 'exit $?' ERR
 # These build scripts don't need to have the aarch64 part of the distro specified
 # I.e., specifying 'luminous,centos-arm64,7' is not necessary for aarch64 builds; these scripts
 #       will do the right build. See configurable CENTOS_AARCH64_FLAVOR_DISTRO below
-X86_64_FLAVORS_TO_BUILD="${X86_64_FLAVORS_TO_BUILD:-pacific,centos,8 quincy,centos,8 reef,centos,8}"
-AARCH64_FLAVORS_TO_BUILD="${AARCH64_FLAVORS_TO_BUILD:-pacific,centos,8 quincy,centos,8 reef,centos,8}"
+X86_64_FLAVORS_TO_BUILD="${X86_64_FLAVORS_TO_BUILD:- quincy,centos,9 reef,centos,9 squid,centos,9}"
+AARCH64_FLAVORS_TO_BUILD="${AARCH64_FLAVORS_TO_BUILD:- quincy,centos,9 reef,centos,9 squid,centos,9}"
 
 # Allow running this script with the env var ARCH='aarch64' to build arm images
 # ARCH='x86_64'
@@ -343,7 +343,7 @@ function get_tags_matching () {
   while response="$(curl --silent --fail --list-only --location \
                       "${tag_list_url}&page=${page}")"; do
     local matching_tags ; matching_tags="$(echo "${response}" | \
-              jq -r ".tags[] | select(.name | match(\"${version_tag}\")) | .name")"
+              jq -r ".tags[] | select(.end_ts == null) | select(.name | match(\"${version_tag}\")) | .name")"
     # jq: From the results of the curl, select all images with a name matching the matcher, and then
     # output the name. Exits success w/ empty string if no matches found.
     if [ -n "${matching_tags}" ]; then
