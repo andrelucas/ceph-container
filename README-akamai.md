@@ -45,8 +45,8 @@ line.
 The effect we want is that:
 
 ```sh
-make FLAVORS=reef,centos,8 \
-    BASEOS_REGISTRY=quay.io/centos BASEOS_REPO=centos BASEOS_TAG=stream8 \
+make FLAVORS=reef,centos,9 \
+    BASEOS_REGISTRY=quay.io/centos BASEOS_REPO=centos BASEOS_TAG=stream9 \
     CUSTOM_CEPH_YUM_REPO=http://SERVER:PORT/ \
     build
 ```
@@ -128,13 +128,13 @@ the target to `stage` (check this is the same list of options as above, the
 doc could get out of sync):
 
 ```sh
-make FLAVORS=reef,centos,8 \
-    BASEOS_REGISTRY=quay.io/centos BASEOS_REPO=centos BASEOS_TAG=stream8 \
+make FLAVORS=reef,centos,9 \
+    BASEOS_REGISTRY=quay.io/centos BASEOS_REPO=centos BASEOS_TAG=stream9 \
     CUSTOM_CEPH_YUM_REPO=http://SERVER:PORT/ \
     stage
 ```
 
-The `Dockerfile`s you seek are in `staging/reef-centos-8-x86_64`. It's safest
+The `Dockerfile`s you seek are in `staging/reef-centos-9-x86_64`. It's safest
 to do `rm -rf staging/*` beforehand or it won't reliably regenerate the
 files. You can also do `make clean.all`, but that will delete a load of Docker
 images as well which might not be what you want.
