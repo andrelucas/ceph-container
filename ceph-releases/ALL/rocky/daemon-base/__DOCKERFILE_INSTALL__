@@ -125,7 +125,6 @@ bash -c ' \
   fi && \
   if [[ __ENV_[DISTRO_VERSION]__ -eq 8 ]]; then \
     yum install -y dnf-plugins-core ; \
-    yum copr enable -y tchaikov/python-scikit-learn ; \
     yum copr enable -y tchaikov/python3-asyncssh ; \
     yum copr enable -y ceph/grpc ; \
     TOOLS_REPO=powertools ; \
